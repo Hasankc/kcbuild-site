@@ -62,8 +62,8 @@ export default function Navbar() {
             onClick={() => scrollTo('hero')}
             className="flex items-center gap-1 group"
           >
-            <span className="text-xl font-black text-turquoise tracking-tight">KC</span>
-            <span className="text-xl font-black text-gray-800 dark:text-white tracking-tight">Build</span>
+            <span className="text-xl font-black text-turquoise tracking-tight leading-none">KC</span>
+            <span className="text-xl font-black text-gray-800 dark:text-white tracking-tight leading-none">Build</span>
             <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1 animate-pulse-dot" />
           </button>
 

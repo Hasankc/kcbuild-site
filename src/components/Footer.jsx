@@ -44,8 +44,8 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-1 mb-3">
-              <span className="text-2xl font-black text-turquoise">KC</span>
-              <span className="text-2xl font-black text-white">Build</span>
+              <span className="text-2xl font-black text-turquoise leading-none">KC</span>
+              <span className="text-2xl font-black text-white leading-none">Build</span>
               <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1" />
             </div>
             <p className="text-sm text-white/50 leading-relaxed mb-4 max-w-[220px]">
@@ -135,14 +135,6 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/30">{f.rights}</p>
-          <div className="flex items-center gap-1.5 text-xs text-white/25">
-            <span>Built with</span>
-            <span className="text-turquoise font-semibold">React</span>
-            <span>+</span>
-            <span className="text-turquoise font-semibold">Vite</span>
-            <span>+</span>
-            <span className="text-turquoise font-semibold">Tailwind</span>
-          </div>
         </div>
       </div>
     </footer>
