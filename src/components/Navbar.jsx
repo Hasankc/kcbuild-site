@@ -4,12 +4,52 @@ import { Moon, Sun, Menu, X, Calendar } from 'lucide-react'
 import { useLang } from '../context/LanguageContext'
 import { useTheme } from '../context/ThemeContext'
 
+const FlagIcon = ({ country }) => {
+  if (country === 'ar') {
+    return (
+      <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
+        <rect width="22" height="4.66" fill="#ce1126" />
+        <rect y="4.66" width="22" height="4.68" fill="#fff" />
+        <rect y="9.34" width="22" height="4.66" fill="#000" />
+        <path d="M4.5 7.5h13" stroke="#009A49" strokeWidth="1.2" strokeLinecap="round" />
+        <circle cx="5.5" cy="6" r="0.7" fill="#009A49" />
+        <circle cx="8.5" cy="6" r="0.7" fill="#009A49" />
+        <circle cx="11.5" cy="6" r="0.7" fill="#009A49" />
+        <circle cx="14.5" cy="6" r="0.7" fill="#009A49" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
+      <rect width="22" height="14" fill="#012169" />
+      <path d="M0 5.6h22M0 8.4h22M7 0l15 14M0 0l15 14" stroke="#fff" strokeWidth="3" />
+      <path d="M0 6.6h22M0 7.4h22M8.5 0l13 14M0 0l13 14" stroke="#c8102e" strokeWidth="2" />
+      <path d="M10.5 0v14M0 7h22" stroke="#fff" strokeWidth="4" />
+      <path d="M10.5 0v14M0 7h22" stroke="#c8102e" strokeWidth="2" />
+    </svg>
+  )
+}
+
 export default function Navbar() {
-  const { t, toggleLang } = useLang()
+  const { t, lang, toggleLang } = useLang()
   const { theme, toggleTheme } = useTheme()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
+
+  const langButtonContent = lang === 'ar'
+    ? (
+      <>
+        <FlagIcon country="ar" />
+        <span className="ms-1">AR</span>
+      </>
+    ) : (
+      <>
+        <FlagIcon country="en" />
+        <span className="ms-1">EN</span>
+      </>
+    )
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -61,8 +101,9 @@ export default function Navbar() {
           <button
             onClick={() => scrollTo('hero')}
             className="flex items-center gap-1 group"
+            dir="ltr"
           >
-            <span className="text-xl font-black text-turquoise tracking-tight leading-none">KC</span>
+            <span className="text-xl font-black text-turquoise tracking-tight leading-none">Kc</span>
             <span className="text-xl font-black text-gray-800 dark:text-white tracking-tight leading-none">Build</span>
             <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1 animate-pulse-dot" />
           </button>
@@ -95,9 +136,9 @@ export default function Navbar() {
             {/* Language Toggle */}
             <button
               onClick={toggleLang}
-              className="px-3 py-1.5 text-xs font-bold border border-turquoise text-turquoise rounded-full hover:bg-turquoise hover:text-white transition-all duration-200"
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full hover:bg-turquoise hover:text-white transition-all duration-200 whitespace-nowrap"
             >
-              {t.nav.langToggle}
+              {langButtonContent}
             </button>
 
             {/* Theme Toggle */}
@@ -167,8 +208,11 @@ export default function Navbar() {
                 </motion.button>
               ))}
               <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-navy-border mt-1">
-                <button onClick={toggleLang} className="px-3 py-1.5 text-xs font-bold border border-turquoise text-turquoise rounded-full">
-                  {t.nav.langToggle}
+                <button
+                  onClick={toggleLang}
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full whitespace-nowrap"
+                >
+                  {langButtonContent}
                 </button>
                 <button onClick={toggleTheme} className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border">
                   {theme === 'dark' ? <Sun size={15} className="text-turquoise" /> : <Moon size={15} />}

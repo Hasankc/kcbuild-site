@@ -3,7 +3,7 @@ import { Instagram, Github, ExternalLink } from 'lucide-react'
 import { useLang } from '../context/LanguageContext'
 
 export default function Footer() {
-  const { t } = useLang()
+  const { t, isRTL } = useLang()
   const f = t.footer
 
   const scrollTo = (id) =>
@@ -35,23 +35,26 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-10 mb-10 ${isRTL ? 'text-right' : 'text-left'}`}>
           {/* Col 1 — Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className={isRTL ? 'text-right' : 'text-left'}
           >
-            <div className="flex items-center gap-1 mb-3">
-              <span className="text-2xl font-black text-turquoise leading-none">KC</span>
+            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'justify-end' : 'justify-start'}`} dir="ltr">
+              <span className="text-2xl font-black text-turquoise leading-none">Kc</span>
               <span className="text-2xl font-black text-white leading-none">Build</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1" />
+              <span className={isRTL ? 'w-1.5 h-1.5 rounded-full bg-turquoise me-0' : 'w-1.5 h-1.5 rounded-full bg-turquoise ms-2'} />
             </div>
-            <p className="text-sm text-white/50 leading-relaxed mb-4 max-w-[220px]">
+            <p className={`text-sm text-white/50 leading-relaxed mb-4 max-w-[220px] ${isRTL ? 'text-right' : 'text-left'}`}>
               {f.tagline}
             </p>
-            <p className="text-xs text-white/30">{f.madeIn}</p>
+            <p className={`text-xs text-white/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+              {f.madeIn}
+            </p>
           </motion.div>
 
           {/* Col 2 — Quick Links */}
@@ -60,6 +63,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
+            className={isRTL ? 'text-right' : 'text-left'}
           >
             <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4">
               {f.links}
@@ -84,6 +88,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className={isRTL ? 'text-right' : 'text-left'}
           >
             <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4">
               {f.social}
@@ -133,7 +138,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className={`border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 ${isRTL ? 'text-right' : 'text-left'}`}>
           <p className="text-xs text-white/30">{f.rights}</p>
         </div>
       </div>

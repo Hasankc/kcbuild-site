@@ -176,7 +176,7 @@ export const ar = {
     services: 'الخدمات',
     portfolio: 'المشاريع',
     contact: 'التواصل',
-    rights: '© 2025 KC Build — جميع الحقوق محفوظة',
+    rights: '© 2025 Kc Build — جميع الحقوق محفوظة',
     madeIn: 'صُنع بـ ❤️ في العراق',
   },
 }

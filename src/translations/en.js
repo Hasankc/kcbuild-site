@@ -176,7 +176,7 @@ export const en = {
     services: 'Services',
     portfolio: 'Portfolio',
     contact: 'Contact',
-    rights: '© 2025 KC Build — All rights reserved',
+    rights: '© 2025 Kc Build — All rights reserved',
     madeIn: 'Made with ❤️ in Iraq',
   },
 }
