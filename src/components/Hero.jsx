@@ -79,7 +79,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex flex-col justify-start md:justify-center pt-32 pb-24">
       {/* Background Orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 right-[-80px] w-[420px] h-[420px] rounded-full bg-turquoise/8 dark:bg-turquoise/5 blur-3xl animate-float" />
@@ -95,7 +95,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 w-full">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-28 w-full">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -111,8 +111,8 @@ export default function Hero() {
           </motion.div>
 
           {/* Headline */}
-          <motion.div variants={itemVariants} className="mb-6">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight">
+          <motion.div variants={itemVariants} className="mb-16">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight break-words whitespace-normal leading-relaxed sm:leading-relaxed md:leading-loose">
               <span className="text-gray-800 dark:text-white block">{t.hero.headline1}</span>
               <span className="gradient-text-animate block">{t.hero.headline2}</span>
             </h1>
@@ -121,7 +121,7 @@ export default function Hero() {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="max-w-2xl mx-auto text-lg sm:text-xl text-gray-500 dark:text-gray-400 leading-relaxed mb-10"
+            className="max-w-2xl mx-auto text-lg sm:text-xl text-gray-500 dark:text-gray-400 leading-relaxed mb-16"
           >
             {t.hero.sub}
           </motion.p>
@@ -129,13 +129,13 @@ export default function Hero() {
           {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16"
           >
             <motion.button
               onClick={() => scrollTo('contact')}
               whileHover={{ scale: 1.04, boxShadow: '0 8px 30px rgba(45,212,191,0.35)' }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-7 py-3.5 bg-turquoise text-white font-bold rounded-2xl text-base shadow-md hover:bg-turquoise-dark transition-colors w-full sm:w-auto justify-center"
+              className="flex items-center gap-2 px-5 py-3 sm:px-7 sm:py-3.5 bg-turquoise text-white font-bold rounded-2xl text-sm sm:text-base shadow-md hover:bg-turquoise-dark transition-colors w-full sm:w-auto justify-center"
             >
               <Calendar size={18} />
               {t.hero.cta1}
@@ -145,7 +145,7 @@ export default function Hero() {
               onClick={() => scrollTo('services')}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-7 py-3.5 border-2 border-turquoise text-turquoise-dark dark:text-turquoise font-bold rounded-2xl text-base hover:bg-turquoise/8 transition-all w-full sm:w-auto justify-center"
+              className="flex items-center gap-2 px-5 py-3 sm:px-7 sm:py-3.5 border-2 border-turquoise text-turquoise-dark dark:text-turquoise font-bold rounded-2xl text-sm sm:text-base hover:bg-turquoise/8 transition-all w-full sm:w-auto justify-center"
             >
               {t.hero.cta2}
               <ArrowRight size={18} className={isRTL ? 'rotate-180' : ''} />
@@ -154,7 +154,7 @@ export default function Hero() {
 
           {/* Stats */}
           <motion.div variants={itemVariants}>
-            <div className="inline-flex items-center divide-x divide-gray-200 dark:divide-gray-700 bg-white/60 dark:bg-navy-card/60 backdrop-blur-sm rounded-2xl border border-turquoise/10 px-2 py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white/60 dark:bg-navy-card/60 backdrop-blur-sm rounded-2xl border border-turquoise/10 px-4 py-6 mt-16">
               {t.hero.stats.map((stat, i) => (
                 <StatItem key={i} stat={stat} />
               ))}

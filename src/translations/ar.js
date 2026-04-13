@@ -21,6 +21,9 @@ export const ar = {
     ],
     scrollHint: 'اكتشف المزيد',
     techStrip: ['React', 'Next.js', 'Node.js', 'TypeScript', 'Tailwind CSS', 'MongoDB', 'Firebase', 'PostgreSQL', 'Vite', 'Vercel'],
+    feature1: 'إطلاق سريع وجاهز للعمل',
+    feature2: 'تصميم متجاوب للهاتف والجوال',
+    feature3: 'تواصل واضح ودعم مستمر',
   },
   services: {
     badge: 'ما نقدمه',

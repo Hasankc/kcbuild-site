@@ -59,7 +59,7 @@ export default function Booking() {
   }
 
   return (
-    <section id="contact" className="py-24 bg-white/40 dark:bg-navy-card/30 relative">
+    <section id="contact" className="pt-48 pb-24 bg-white/40 dark:bg-navy-card/30 relative">
       <div className="section-divider mb-20" />
 
       {/* Background accent */}
@@ -75,11 +75,11 @@ export default function Booking() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-14"
+          className="text-center mb-20"
         >
           <SectionBadge text={b.badge} />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-4">{b.title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">{b.sub}</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-20 leading-loose">{b.title}</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto mt-4 mb-12">{b.sub}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

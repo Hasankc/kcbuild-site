@@ -5,6 +5,8 @@
 /* ─── Smooth Scroll ─────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  scroll-padding-top: 14rem;
 }
 
 /* ─── Font Defaults ─────────────────────────────────────────── */
@@ -16,11 +18,24 @@ html {
 }
 
 body {
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Custom Scrollbar ──────────────────────────────────────── */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+section {
+  position: relative;
+  scroll-margin-top: 14rem;
+}
+
+/* ─── Custom Scrollbar ────────────────────────────────────────
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -55,6 +70,7 @@ body {
 
   /* Glassmorphism card */
   .glass-card {
+    min-width: 0;
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);

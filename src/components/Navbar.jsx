@@ -73,7 +73,12 @@ export default function Navbar() {
   }, [])
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    const el = document.getElementById(id)
+    if (el) {
+      const offset = 104
+      const top = el.getBoundingClientRect().top + window.pageYOffset - offset
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
     setMenuOpen(false)
   }
 
@@ -167,7 +172,9 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-navy-card2 transition-colors"
+            aria-controls="mobile-menu"
+            aria-expanded={menuOpen}
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-navy-card2 transition-colors"
             aria-label="Toggle menu"
           >
             <AnimatePresence mode="wait">
@@ -184,6 +191,7 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -207,10 +215,10 @@ export default function Navbar() {
                   {item.label}
                 </motion.button>
               ))}
-              <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-navy-border mt-1">
+              <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-3 border-t border-gray-100 dark:border-navy-border mt-1">
                 <button
                   onClick={toggleLang}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full whitespace-nowrap"
+                  className="flex items-center justify-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full whitespace-nowrap"
                 >
                   {langButtonContent}
                 </button>

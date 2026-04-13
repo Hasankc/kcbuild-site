@@ -18,7 +18,7 @@ export default function Process() {
   const p = t.process
 
   return (
-    <section id="process" className="py-24 bg-white/40 dark:bg-navy-card/30 relative">
+    <section id="process" className="pt-48 pb-24 bg-white/40 dark:bg-navy-card/30 relative">
       <div className="section-divider mb-20" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
@@ -27,19 +27,19 @@ export default function Process() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-16"
+          className="text-center mb-24"
         >
           <SectionBadge text={p.badge} />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-4">{p.title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">{p.sub}</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-20 leading-loose">{p.title}</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto mt-4 mb-12">{p.sub}</p>
         </motion.div>
 
         {/* Steps */}
         <div className="relative">
           {/* Connector Line (desktop) */}
-          <div className="hidden md:block absolute top-10 start-[12%] end-[12%] h-px border-t-2 border-dashed border-turquoise/30 dark:border-turquoise/20 z-0" />
+          <div className="hidden lg:block absolute top-10 start-[12%] end-[12%] h-px border-t-2 border-dashed border-turquoise/30 dark:border-turquoise/20 z-0" />
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 md:gap-6 relative z-10">
             {p.steps.map((step, i) => {
               const Icon = iconMap[step.icon]
               return (

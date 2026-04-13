@@ -35,7 +35,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-10 mb-10 ${isRTL ? 'text-right' : 'text-left'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10 mb-10 ${isRTL ? 'text-right' : 'text-left'}`}>
           {/* Col 1 — Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -29,7 +29,7 @@ export default function Services() {
   }
 
   return (
-    <section id="services" className="py-24 relative">
+    <section id="services" className="pt-48 pb-24 relative">
       <div className="section-divider mb-20" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
@@ -38,11 +38,11 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-14"
+          className="text-center mb-20"
         >
           <SectionBadge text={s.badge} />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-4">{s.title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">{s.sub}</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-20 leading-loose">{s.title}</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto mt-4 mb-12">{s.sub}</p>
         </motion.div>
 
         {/* Cards Grid */}

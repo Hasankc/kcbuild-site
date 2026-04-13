@@ -86,10 +86,17 @@ function CustomCursor() {
 
 function AppContent() {
   return (
-    <div className="min-h-screen bg-offwhite dark:bg-navy text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen pt-28 bg-offwhite dark:bg-navy text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+      <a
+        href="#hero"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 rounded-md bg-white text-slate-900 px-3 py-2 shadow-sm dark:bg-navy-card dark:text-white"
+      >
+        Skip to content
+      </a>
       <ScrollProgress />
       <CustomCursor />
       <Navbar />
+      <div className="h-20" aria-hidden="true" />
       <main>
         <Hero />
         <Services />

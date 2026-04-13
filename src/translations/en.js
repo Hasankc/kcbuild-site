@@ -21,6 +21,9 @@ export const en = {
     ],
     scrollHint: 'Scroll to explore',
     techStrip: ['React', 'Next.js', 'Node.js', 'TypeScript', 'Tailwind CSS', 'MongoDB', 'Firebase', 'PostgreSQL', 'Vite', 'Vercel'],
+    feature1: 'Fast launch-ready websites',
+    feature2: 'Mobile-first responsive design',
+    feature3: 'Clear communication & support',
   },
   services: {
     badge: 'What We Do',
