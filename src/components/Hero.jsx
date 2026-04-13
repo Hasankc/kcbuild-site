@@ -112,7 +112,7 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.div variants={itemVariants} className="mb-16">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight break-words whitespace-normal leading-relaxed sm:leading-relaxed md:leading-loose">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight break-words whitespace-normal leading-relaxed sm:leading-relaxed md:leading-loose overflow-visible pb-2">
               <span className="text-gray-800 dark:text-white block">{t.hero.headline1}</span>
               <span className="gradient-text-animate block">{t.hero.headline2}</span>
             </h1>

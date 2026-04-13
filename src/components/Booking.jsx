@@ -63,9 +63,11 @@ export default function Booking() {
       <div className="section-divider mb-20" />
 
       {/* Background accent */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute bottom-0 start-0 w-80 h-80 rounded-full bg-turquoise/5 blur-3xl" />
-        <div className="absolute top-0 end-0 w-60 h-60 rounded-full bg-turquoise/5 blur-3xl" />
+      <div className="absolute inset-0 pointer-events-none">
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <div className="absolute bottom-0 start-0 w-80 h-80 rounded-full bg-turquoise/5 blur-3xl" />
+          <div className="absolute top-0 end-0 w-60 h-60 rounded-full bg-turquoise/5 blur-3xl" />
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
