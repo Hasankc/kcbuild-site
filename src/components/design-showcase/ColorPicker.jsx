@@ -1,5 +1,5 @@
 // src/components/design-showcase/ColorPicker.jsx
-
+// fix
 export default function ColorPicker({ label, value, onChange }) {
   return (
     <div className="flex items-center justify-between gap-3">
