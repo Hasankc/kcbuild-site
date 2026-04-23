@@ -12,7 +12,38 @@ import Booking from './components/Booking'
 import Footer from './components/Footer'
 import { ArrowUp } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import DesignShowcase from './pages/DesignShowcase'
 
+// ─── Detect current "page" from URL hash ─────────────────────────────────────
+function usePage() {
+  const [page, setPage] = useState(
+    () => window.location.hash === '#design-showcase' ? 'showcase' : 'home'
+  )
+
+  // Listen for hash changes (back/forward browser button)
+  useEffect(() => {
+    const onChange = () => {
+      setPage(window.location.hash === '#design-showcase' ? 'showcase' : 'home')
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', onChange)
+    return () => window.removeEventListener('hashchange', onChange)
+  }, [])
+
+  const navigate = (target) => {
+    if (target === 'showcase') {
+      window.location.hash = 'design-showcase'
+    } else {
+      window.location.hash = ''
+    }
+    setPage(target)
+    window.scrollTo(0, 0)
+  }
+
+  return { page, navigate }
+}
+
+// ─── Scroll to Top button ─────────────────────────────────────────────────────
 function ScrollToTop() {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
@@ -38,6 +69,7 @@ function ScrollToTop() {
   )
 }
 
+// ─── Scroll Progress bar ──────────────────────────────────────────────────────
 function ScrollProgress() {
   const [progress, setProgress] = useState(0)
   useEffect(() => {
@@ -57,6 +89,7 @@ function ScrollProgress() {
   )
 }
 
+// ─── Custom Cursor ────────────────────────────────────────────────────────────
 function CustomCursor() {
   const dot = useRef(null)
   const ring = useRef(null)
@@ -74,7 +107,6 @@ function CustomCursor() {
     window.addEventListener('mousemove', move)
     return () => window.removeEventListener('mousemove', move)
   }, [])
-  // Only show on desktop
   if (typeof window !== 'undefined' && window.innerWidth < 768) return null
   return (
     <>
@@ -84,7 +116,8 @@ function CustomCursor() {
   )
 }
 
-function AppContent() {
+// ─── Main home page content ───────────────────────────────────────────────────
+function AppContent({ onNavigate }) {
   return (
     <div className="min-h-screen pt-28 bg-offwhite dark:bg-navy text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
       <a
@@ -95,7 +128,10 @@ function AppContent() {
       </a>
       <ScrollProgress />
       <CustomCursor />
-      <Navbar />
+
+      {/* Pass onNavigate so Navbar can add the Design Showcase link */}
+      <Navbar onNavigate={onNavigate} />
+
       <div className="h-20" aria-hidden="true" />
       <main>
         <Hero />
@@ -112,11 +148,18 @@ function AppContent() {
   )
 }
 
+// ─── Root App ─────────────────────────────────────────────────────────────────
 export default function App() {
+  const { page, navigate } = usePage()
+
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <AppContent />
+        {page === 'showcase' ? (
+          <DesignShowcase onBack={() => navigate('home')} />
+        ) : (
+          <AppContent onNavigate={navigate} />
+        )}
       </LanguageProvider>
     </ThemeProvider>
   )

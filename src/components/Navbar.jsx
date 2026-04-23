@@ -31,7 +31,8 @@ const FlagIcon = ({ country }) => {
   )
 }
 
-export default function Navbar() {
+// Added onNavigate to props
+export default function Navbar({ onNavigate }) {
   const { t, lang, toggleLang } = useLang()
   const { theme, toggleTheme } = useTheme()
   const [scrolled, setScrolled] = useState(false)
@@ -157,6 +158,15 @@ export default function Navbar() {
                 : <Moon size={15} className="text-gray-600" />}
             </button>
 
+            {/* --- NEW DESIGN SHOWCASE BUTTON --- */}
+            <button
+              onClick={() => onNavigate('showcase')}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-turquoise text-navy rounded-lg hover:bg-turquoise-dark transition-all"
+            >
+              🎨 Design Showcase
+            </button>
+            {/* --------------------------------- */}
+
             {/* CTA Button */}
             <motion.button
               onClick={() => scrollTo('contact')}
@@ -225,6 +235,19 @@ export default function Navbar() {
                 <button onClick={toggleTheme} className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border">
                   {theme === 'dark' ? <Sun size={15} className="text-turquoise" /> : <Moon size={15} />}
                 </button>
+                
+                {/* --- MOBILE DESIGN SHOWCASE BUTTON --- */}
+                <button
+                  onClick={() => {
+                    onNavigate('showcase')
+                    setMenuOpen(false)
+                  }}
+                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-turquoise text-navy rounded-lg hover:bg-turquoise-dark transition-all"
+                >
+                  🎨 Design Showcase
+                </button>
+                {/* -------------------------------------- */}
+
                 <button
                   onClick={() => scrollTo('contact')}
                   className="flex-1 py-2 bg-turquoise text-white text-sm font-semibold rounded-xl text-center"
