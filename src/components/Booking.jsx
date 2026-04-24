@@ -1,246 +1,386 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Check, Send, Loader2, User, Mail, ChevronDown } from 'lucide-react'
-import { useLang } from '../context/LanguageContext'
+// src/components/Booking.jsx
+// ─────────────────────────────────────────────────────────────────────────────
+// SETUP: Replace YOUR_FORMSPREE_ID below with your real Formspree form ID.
+// Sign up free at formspree.io → New Form → copy the ID (e.g. xnqkjrvo)
+// ─────────────────────────────────────────────────────────────────────────────
 
-function SectionBadge({ text }) {
-  return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-turquoise/30 bg-turquoise/8 dark:bg-turquoise/10 mb-4">
-      <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
-      <span className="text-xs font-bold text-turquoise-dark dark:text-turquoise uppercase tracking-wider">{text}</span>
-    </div>
-  )
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { useLanguage } from '../context/LanguageContext'
+import {
+  Calendar,
+  Send,
+  CheckCircle,
+  AlertCircle,
+  User,
+  Mail,
+  MessageSquare,
+  Phone,
+  Loader2,
+} from 'lucide-react'
+
+// ── ⚙️  PUT YOUR FORMSPREE FORM ID HERE ──────────────────────────────────────
+const FORMSPREE_ID = 'mqewnqwe'
+// ─────────────────────────────────────────────────────────────────────────────
+
+const FADE_UP = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.1 },
+  }),
 }
 
-const inputClass = `
-  w-full px-4 py-3 rounded-xl border bg-white/60 dark:bg-navy-card/50
-  border-gray-200 dark:border-navy-border
-  text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-  text-sm font-medium
-  focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/15
-  transition-all duration-200
-  appearance-none
-`
-
-const errorClass = 'border-red-400 dark:border-red-500 focus:border-red-400 focus:ring-red-400/15'
-
 export default function Booking() {
-  const { t, isRTL } = useLang()
-  const b = t.booking
+  const { t, isRTL } = useLanguage()
 
   const [form, setForm] = useState({
-    name: '', email: '', projectType: '', budget: '', message: '',
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    message: '',
   })
-  const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState('idle') // idle | sending | success
+  const [status, setStatus] = useState('idle') // idle | loading | success | error
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const validate = () => {
-    const errs = {}
-    if (!form.name.trim()) errs.name = b.errors.name
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = b.errors.email
-    if (!form.message.trim()) errs.message = b.errors.message
-    return errs
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleChange = (field, value) => {
-    setForm(f => ({ ...f, [field]: value }))
-    if (errors[field]) setErrors(e => { const ne = { ...e }; delete ne[field]; return ne })
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Basic validation
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setErrorMsg(
+        isRTL
+          ? 'يرجى ملء جميع الحقول المطلوبة'
+          : 'Please fill in all required fields'
+      )
+      setStatus('error')
+      return
+    }
+
+    if (!/\S+@\S+\.\S+/.test(form.email)) {
+      setErrorMsg(
+        isRTL ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email'
+      )
+      setStatus('error')
+      return
+    }
+
+    setStatus('loading')
+    setErrorMsg('')
+
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          service: form.service,
+          message: form.message,
+        }),
+      })
+
+      if (res.ok) {
+        setStatus('success')
+        setForm({ name: '', email: '', phone: '', service: '', message: '' })
+      } else {
+        throw new Error('Formspree error')
+      }
+    } catch {
+      setStatus('error')
+      setErrorMsg(
+        isRTL
+          ? 'حدث خطأ. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.'
+          : 'Something went wrong. Please try again or contact us directly.'
+      )
+    }
   }
 
-  const handleSubmit = async () => {
-    const errs = validate()
-    if (Object.keys(errs).length > 0) { setErrors(errs); return }
-    setStatus('sending')
-    // Simulate async send — replace with EmailJS or Formspree
-    await new Promise(r => setTimeout(r, 1500))
-    setStatus('success')
-    setForm({ name: '', email: '', projectType: '', budget: '', message: '' })
-    setTimeout(() => setStatus('idle'), 5000)
-  }
+  const services = isRTL
+    ? [
+        'موقع ويب احترافي',
+        'تطبيق ويب متكامل',
+        'متجر إلكتروني',
+        'تصميم UI/UX',
+        'صيانة وتحديث',
+        'خدمة أخرى',
+      ]
+    : [
+        'Professional Website',
+        'Full-Stack Web App',
+        'E-Commerce Store',
+        'UI/UX Design',
+        'Maintenance & Updates',
+        'Other',
+      ]
 
   return (
-    <section id="contact" className="pt-48 pb-24 bg-white/40 dark:bg-navy-card/30 relative">
-      <div className="section-divider mb-20" />
-
-      {/* Background accent */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          <div className="absolute bottom-0 start-0 w-80 h-80 rounded-full bg-turquoise/5 blur-3xl" />
-          <div className="absolute top-0 end-0 w-60 h-60 rounded-full bg-turquoise/5 blur-3xl" />
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Heading */}
+    <section
+      id="booking"
+      className="py-24 bg-offwhite dark:bg-navy"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* ── Section Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-20"
+          variants={FADE_UP}
+          className="text-center mb-16"
         >
-          <SectionBadge text={b.badge} />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-20 leading-loose">{b.title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto mt-4 mb-12">{b.sub}</p>
+          <span className="inline-block px-4 py-1.5 rounded-full bg-turquoise/10 text-turquoise text-sm font-semibold mb-4 border border-turquoise/20">
+            {isRTL ? '📅 ابدأ مشروعك' : '📅 Start Your Project'}
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-navy dark:text-white mb-4">
+            {t('booking.title') || (isRTL ? 'تواصل معنا' : 'Get In Touch')}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+            {t('booking.subtitle') ||
+              (isRTL
+                ? 'أخبرنا عن مشروعك وسنتواصل معك خلال 24 ساعة'
+                : "Tell us about your project and we'll get back to you within 24 hours")}
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* LEFT — Calendly CTA */}
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          {/* ── Left: Calendly CTA ── */}
           <motion.div
-            initial={{ opacity: 0, x: isRTL ? 40 : -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="glass-card p-8 flex flex-col justify-between"
+            custom={0}
+            variants={FADE_UP}
+            className="space-y-6"
           >
-            <div>
-              {/* Calendar visual */}
-              <div className="w-16 h-16 rounded-2xl bg-turquoise/12 flex items-center justify-center mb-6">
-                <Calendar size={28} className="text-turquoise" />
+            {/* Calendly card */}
+            <div className="rounded-2xl border border-turquoise/20 bg-white dark:bg-navy-card p-8 shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-turquoise/10 flex items-center justify-center mb-4">
+                <Calendar className="text-turquoise" size={24} />
               </div>
-              <h3 className="text-2xl font-black text-gray-800 dark:text-white mb-3">{b.title}</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">{b.sub}</p>
-
-              {/* Feature checklist */}
-              <div className="flex flex-col gap-3 mb-8">
-                {b.features.map((feat, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-turquoise/15 flex items-center justify-center flex-shrink-0">
-                      <Check size={11} className="text-turquoise" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{feat}</span>
-                  </div>
-                ))}
-              </div>
+              <h3 className="text-xl font-bold text-navy dark:text-white mb-2">
+                {isRTL ? 'احجز اجتماعاً مجانياً' : 'Book a Free Call'}
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+                {isRTL
+                  ? 'اختر وقتاً يناسبك لمناقشة مشروعك معنا مباشرة'
+                  : 'Pick a time that works for you to discuss your project directly'}
+              </p>
+              <a
+                href="https://calendly.com/kcbuild"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-turquoise hover:bg-teal-500 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg shadow-turquoise/25"
+              >
+                <Calendar size={18} />
+                {isRTL ? 'احجز الآن' : 'Book Now — Free'}
+              </a>
             </div>
 
-            {/* Calendly button */}
-            <motion.a
-              href="https://calendly.com/kcbuild"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.03, boxShadow: '0 12px 36px rgba(45,212,191,0.35)' }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-turquoise text-white font-bold rounded-2xl text-base shadow-md hover:bg-turquoise-dark transition-colors"
-            >
-              <Calendar size={18} />
-              {b.calendlyBtn}
-            </motion.a>
+            {/* Contact info cards */}
+            <div className="grid grid-cols-1 gap-3">
+              {[
+                {
+                  icon: '📧',
+                  label: isRTL ? 'البريد الإلكتروني' : 'Email',
+                  value: 'hello@kcbuild.iq',
+                },
+                {
+                  icon: '📱',
+                  label: 'WhatsApp',
+                  value: '+964 xxx xxx xxxx',
+                },
+                {
+                  icon: '⏰',
+                  label: isRTL ? 'وقت الرد' : 'Response Time',
+                  value: isRTL ? 'خلال 24 ساعة' : 'Within 24 hours',
+                },
+              ].map(({ icon, label, value }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-navy-card border border-gray-100 dark:border-navy-border"
+                >
+                  <span className="text-2xl">{icon}</span>
+                  <div>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{label}</p>
+                    <p className="text-sm font-semibold text-navy dark:text-white">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* RIGHT — Contact Form */}
+          {/* ── Right: Contact Form ── */}
           <motion.div
-            initial={{ opacity: 0, x: isRTL ? -40 : 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="glass-card p-8"
+            custom={1}
+            variants={FADE_UP}
           >
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">{b.formTitle}</h3>
+            <div className="rounded-2xl border border-gray-100 dark:border-navy-border bg-white dark:bg-navy-card p-8 shadow-lg">
+              <h3 className="text-xl font-bold text-navy dark:text-white mb-6">
+                {isRTL ? 'أرسل لنا رسالة' : 'Send Us a Message'}
+              </h3>
 
-            <div className="space-y-4">
-              {/* Name */}
-              <div>
-                <div className="relative">
-                  <User size={15} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder={b.fields.name}
-                    value={form.name}
-                    onChange={e => handleChange('name', e.target.value)}
-                    className={`${inputClass} ps-10 ${errors.name ? errorClass : ''}`}
-                  />
-                </div>
-                {errors.name && <p className="text-xs text-red-500 mt-1 ms-1">{errors.name}</p>}
-              </div>
-
-              {/* Email */}
-              <div>
-                <div className="relative">
-                  <Mail size={15} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="email"
-                    placeholder={b.fields.email}
-                    value={form.email}
-                    onChange={e => handleChange('email', e.target.value)}
-                    className={`${inputClass} ps-10 ${errors.email ? errorClass : ''}`}
-                  />
-                </div>
-                {errors.email && <p className="text-xs text-red-500 mt-1 ms-1">{errors.email}</p>}
-              </div>
-
-              {/* Project Type */}
-              <div className="relative">
-                <select
-                  value={form.projectType}
-                  onChange={e => handleChange('projectType', e.target.value)}
-                  className={inputClass + ' pe-10 cursor-pointer'}
+              {/* Success state */}
+              {status === 'success' ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-12"
                 >
-                  <option value="">{b.fields.projectType}</option>
-                  {b.projectTypes.map((opt, i) => (
-                    <option key={i} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <ChevronDown size={15} className="absolute end-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
+                  <CheckCircle className="text-turquoise mx-auto mb-4" size={56} />
+                  <h4 className="text-xl font-bold text-navy dark:text-white mb-2">
+                    {isRTL ? 'تم الإرسال بنجاح! 🎉' : 'Message Sent! 🎉'}
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    {isRTL
+                      ? 'سنتواصل معك خلال 24 ساعة'
+                      : "We'll get back to you within 24 hours"}
+                  </p>
+                  <button
+                    onClick={() => setStatus('idle')}
+                    className="text-turquoise hover:underline text-sm font-medium"
+                  >
+                    {isRTL ? 'إرسال رسالة أخرى' : 'Send another message'}
+                  </button>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Name */}
+                  <div className="relative">
+                    <User
+                      size={16}
+                      className="absolute top-3.5 start-3.5 text-gray-400"
+                    />
+                    <input
+                      type="text"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder={isRTL ? 'الاسم الكامل *' : 'Full Name *'}
+                      required
+                      className="w-full ps-10 pe-4 py-3 rounded-xl border border-gray-200 dark:border-navy-border bg-gray-50 dark:bg-navy/50 text-navy dark:text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise transition"
+                    />
+                  </div>
 
-              {/* Budget */}
-              <div className="relative">
-                <select
-                  value={form.budget}
-                  onChange={e => handleChange('budget', e.target.value)}
-                  className={inputClass + ' pe-10 cursor-pointer'}
-                >
-                  <option value="">{b.fields.budget}</option>
-                  {b.budgetOptions.map((opt, i) => (
-                    <option key={i} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <ChevronDown size={15} className="absolute end-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
+                  {/* Email */}
+                  <div className="relative">
+                    <Mail
+                      size={16}
+                      className="absolute top-3.5 start-3.5 text-gray-400"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder={isRTL ? 'البريد الإلكتروني *' : 'Email Address *'}
+                      required
+                      className="w-full ps-10 pe-4 py-3 rounded-xl border border-gray-200 dark:border-navy-border bg-gray-50 dark:bg-navy/50 text-navy dark:text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise transition"
+                    />
+                  </div>
 
-              {/* Message */}
-              <div>
-                <textarea
-                  rows={4}
-                  placeholder={b.fields.message}
-                  value={form.message}
-                  onChange={e => handleChange('message', e.target.value)}
-                  className={`${inputClass} resize-none ${errors.message ? errorClass : ''}`}
-                />
-                {errors.message && <p className="text-xs text-red-500 mt-1 ms-1">{errors.message}</p>}
-              </div>
+                  {/* Phone */}
+                  <div className="relative">
+                    <Phone
+                      size={16}
+                      className="absolute top-3.5 start-3.5 text-gray-400"
+                    />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder={isRTL ? 'رقم الهاتف (اختياري)' : 'Phone Number (optional)'}
+                      className="w-full ps-10 pe-4 py-3 rounded-xl border border-gray-200 dark:border-navy-border bg-gray-50 dark:bg-navy/50 text-navy dark:text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise transition"
+                    />
+                  </div>
 
-              {/* Submit */}
-              <motion.button
-                onClick={handleSubmit}
-                disabled={status === 'sending' || status === 'success'}
-                whileHover={status === 'idle' ? { scale: 1.03, boxShadow: '0 8px 24px rgba(45,212,191,0.3)' } : {}}
-                whileTap={status === 'idle' ? { scale: 0.97 } : {}}
-                className={`w-full py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
-                  status === 'success'
-                    ? 'bg-green-500 text-white'
-                    : 'bg-turquoise text-white hover:bg-turquoise-dark disabled:opacity-70'
-                }`}
-              >
-                <AnimatePresence mode="wait">
-                  {status === 'idle' && (
-                    <motion.span key="idle" className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <Send size={15} /> {b.fields.submit}
-                    </motion.span>
+                  {/* Service */}
+                  <select
+                    name="service"
+                    value={form.service}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-navy-border bg-gray-50 dark:bg-navy/50 text-navy dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise transition"
+                  >
+                    <option value="">
+                      {isRTL ? 'نوع الخدمة (اختياري)' : 'Service Type (optional)'}
+                    </option>
+                    {services.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Message */}
+                  <div className="relative">
+                    <MessageSquare
+                      size={16}
+                      className="absolute top-3.5 start-3.5 text-gray-400"
+                    />
+                    <textarea
+                      name="message"
+                      value={form.message}
+                      onChange={handleChange}
+                      placeholder={
+                        isRTL
+                          ? 'أخبرنا عن مشروعك... *'
+                          : 'Tell us about your project... *'
+                      }
+                      required
+                      rows={4}
+                      className="w-full ps-10 pe-4 py-3 rounded-xl border border-gray-200 dark:border-navy-border bg-gray-50 dark:bg-navy/50 text-navy dark:text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise transition resize-none"
+                    />
+                  </div>
+
+                  {/* Error message */}
+                  {status === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 text-red-500 text-sm bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl border border-red-200 dark:border-red-800"
+                    >
+                      <AlertCircle size={16} />
+                      {errorMsg}
+                    </motion.div>
                   )}
-                  {status === 'sending' && (
-                    <motion.span key="sending" className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <Loader2 size={15} className="animate-spin" /> {b.fields.sending}
-                    </motion.span>
-                  )}
-                  {status === 'success' && (
-                    <motion.span key="success" className="flex items-center gap-2" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-                      <Check size={15} /> {b.successMsg}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={status === 'loading'}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-turquoise hover:bg-teal-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-turquoise/25"
+                  >
+                    {status === 'loading' ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />
+                        {isRTL ? 'جاري الإرسال...' : 'Sending...'}
+                      </>
+                    ) : (
+                      <>
+                        <Send size={18} />
+                        {isRTL ? 'إرسال الرسالة' : 'Send Message'}
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-xs text-gray-400 text-center">
+                    {isRTL
+                      ? '🔒 بياناتك محمية ولن تُشارك مع أطراف أخرى'
+                      : '🔒 Your data is safe and will never be shared'}
+                  </p>
+                </form>
+              )}
             </div>
           </motion.div>
         </div>

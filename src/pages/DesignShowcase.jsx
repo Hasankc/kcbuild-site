@@ -1,18 +1,10 @@
-// src/pages/DesignShowcase.jsx
-// ─────────────────────────────────────────────────────────────────────────────
-// New page: /design-showcase
-// Usage: Import in App.jsx and add a <Route path="/design-showcase" element={<DesignShowcase />} />
-// ─────────────────────────────────────────────────────────────────────────────
-
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, Copy, CheckCheck, Palette, ArrowLeft, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import DesignControls from '../components/design-showcase/DesignControls'
 import PresetButtons from '../components/design-showcase/PresetButtons'
 import LivePreview from '../components/design-showcase/LivePreview'
 
-// ─── Default settings (matches KC Build brand) ───────────────────────────────
 const DEFAULT_SETTINGS = {
   primaryColor: '#2DD4BF',
   secondaryColor: '#0A1628',
@@ -24,7 +16,6 @@ const DEFAULT_SETTINGS = {
   buttonStyle: 'rounded',
 }
 
-// ─── Toast notification ───────────────────────────────────────────────────────
 function Toast({ message, show }) {
   return (
     <AnimatePresence>
@@ -43,12 +34,11 @@ function Toast({ message, show }) {
   )
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-export default function DesignShowcase() {
+export default function DesignShowcase({ onBack }) {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS)
   const [activePreset, setActivePreset] = useState(null)
   const [toast, setToast] = useState({ show: false, message: '' })
-  const [controlsOpen, setControlsOpen] = useState(true) // mobile toggle
+  const [controlsOpen, setControlsOpen] = useState(true)
 
   const showToast = (message) => {
     setToast({ show: true, message })
@@ -57,7 +47,7 @@ export default function DesignShowcase() {
 
   const updateSetting = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
-    setActivePreset(null) // deselect preset on manual change
+    setActivePreset(null)
   }
 
   const applyPreset = (name, presetSettings) => {
@@ -66,7 +56,6 @@ export default function DesignShowcase() {
     showToast(`"${name}" preset applied!`)
   }
 
-  // ── Export JSON ──
   const handleExport = () => {
     const json = JSON.stringify(settings, null, 2)
     const blob = new Blob([json], { type: 'application/json' })
@@ -79,7 +68,6 @@ export default function DesignShowcase() {
     showToast('Design exported as JSON!')
   }
 
-  // ── Copy for WhatsApp ──
   const handleCopyClient = () => {
     const msg =
       `*Client Design Choice* 🎨\n\n` +
@@ -90,13 +78,9 @@ export default function DesignShowcase() {
       `Theme: ${settings.theme.charAt(0).toUpperCase() + settings.theme.slice(1)}\n` +
       `Card Style: ${settings.cardStyle.charAt(0).toUpperCase() + settings.cardStyle.slice(1)}\n` +
       `Button Style: ${settings.buttonStyle.charAt(0).toUpperCase() + settings.buttonStyle.slice(1)}`
-
-    navigator.clipboard.writeText(msg).then(() => {
-      showToast('Copied! Paste into WhatsApp 📱')
-    })
+    navigator.clipboard.writeText(msg).then(() => showToast('Copied! Paste into WhatsApp 📱'))
   }
 
-  // ── Reset to defaults ──
   const handleReset = () => {
     setSettings(DEFAULT_SETTINGS)
     setActivePreset(null)
@@ -105,18 +89,16 @@ export default function DesignShowcase() {
 
   return (
     <div className="min-h-screen bg-[#0A1628] text-white flex flex-col">
-      {/* ── Top Header Bar ── */}
       <header className="sticky top-0 z-40 bg-[#0A1628]/95 backdrop-blur-xl border-b border-white/10">
         <div className="flex items-center justify-between px-4 md:px-6 py-3 gap-3">
-          {/* Left: Back + Title */}
           <div className="flex items-center gap-3 min-w-0">
-            <Link
-              to="/"
+            <button
+              onClick={onBack}
               className="flex items-center gap-1.5 text-white/50 hover:text-[#2DD4BF] transition-colors text-sm shrink-0"
             >
               <ArrowLeft size={15} />
-              <span className="hidden sm:inline">Back</span>
-            </Link>
+              <span className="hidden sm:inline">Back to Site</span>
+            </button>
             <div className="w-px h-5 bg-white/10 hidden sm:block" />
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/15 border border-[#2DD4BF]/30 flex items-center justify-center shrink-0">
@@ -130,8 +112,6 @@ export default function DesignShowcase() {
               </div>
             </div>
           </div>
-
-          {/* Right: Action buttons */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handleReset}
@@ -156,26 +136,12 @@ export default function DesignShowcase() {
             </button>
           </div>
         </div>
-
-        {/* Presets strip */}
         <PresetButtons activePreset={activePreset} onSelect={applyPreset} />
       </header>
 
-      {/* ── Main Layout ── */}
       <div className="flex flex-1 overflow-hidden">
-        {/* ── Controls Panel (sidebar on desktop, drawer on mobile) ── */}
-        <motion.aside
-          initial={false}
-          animate={{
-            width: controlsOpen ? undefined : 0,
-            opacity: controlsOpen ? 1 : 0,
-          }}
-          className={`
-            shrink-0 border-r border-white/10 overflow-y-auto
-            w-full md:w-72 lg:w-80
-            ${controlsOpen ? 'block' : 'hidden'}
-            md:block
-          `}
+        <aside
+          className={`shrink-0 border-r border-white/10 overflow-y-auto w-full md:w-72 lg:w-80 ${controlsOpen ? 'block' : 'hidden'} md:block`}
           style={{ background: 'rgba(255,255,255,0.02)' }}
         >
           <div className="p-5">
@@ -186,8 +152,6 @@ export default function DesignShowcase() {
               </span>
             </div>
             <DesignControls settings={settings} onChange={updateSetting} />
-
-            {/* Mobile-only action buttons */}
             <div className="mt-6 space-y-2 md:hidden">
               <button
                 onClick={handleExport}
@@ -203,11 +167,9 @@ export default function DesignShowcase() {
               </button>
             </div>
           </div>
-        </motion.aside>
+        </aside>
 
-        {/* ── Preview Area ── */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          {/* Mobile: toggle controls button */}
           <div className="flex items-center justify-between mb-4 md:hidden">
             <span className="text-xs text-white/40 uppercase tracking-widest">Live Preview</span>
             <button
@@ -219,16 +181,12 @@ export default function DesignShowcase() {
             </button>
           </div>
 
-          {/* Preview label */}
           <div className="hidden md:flex items-center gap-2 mb-4">
             <div className="h-px flex-1 bg-white/10" />
-            <span className="text-xs text-white/30 uppercase tracking-widest px-3">
-              Live Preview
-            </span>
+            <span className="text-xs text-white/30 uppercase tracking-widest px-3">Live Preview</span>
             <div className="h-px flex-1 bg-white/10" />
           </div>
 
-          {/* The live preview */}
           <motion.div
             key={JSON.stringify(settings)}
             initial={{ opacity: 0.85, scale: 0.995 }}
@@ -238,7 +196,6 @@ export default function DesignShowcase() {
             <LivePreview settings={settings} />
           </motion.div>
 
-          {/* Current settings summary */}
           <div className="mt-5 p-4 bg-white/[0.03] border border-white/10 rounded-2xl">
             <p className="text-[10px] text-white/30 uppercase tracking-widest mb-3 font-medium">
               Current Configuration
@@ -276,7 +233,6 @@ export default function DesignShowcase() {
         </main>
       </div>
 
-      {/* Toast */}
       <Toast message={toast.message} show={toast.show} />
     </div>
   )
