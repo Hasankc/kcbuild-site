@@ -33,7 +33,8 @@ const FADE_UP = {
 }
 
 export default function Booking() {
-  const { t, lang } = useLang() const isRTL = lang === 'ar'
+  const { t, lang } = useLang()
+  const isRTL = lang === 'ar'
 
   const [form, setForm] = useState({
     name: '',
