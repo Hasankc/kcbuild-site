@@ -141,13 +141,10 @@ export default function Booking() {
             {isRTL ? '📅 ابدأ مشروعك' : '📅 Start Your Project'}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-navy dark:text-white mb-4">
-            {t('booking.title') || (isRTL ? 'تواصل معنا' : 'Get In Touch')}
+            {isRTL ? 'تواصل معنا' : 'Get In Touch'}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            {t('booking.subtitle') ||
-              (isRTL
-                ? 'أخبرنا عن مشروعك وسنتواصل معك خلال 24 ساعة'
-                : "Tell us about your project and we'll get back to you within 24 hours")}
+           {isRTL ? 'أخبرنا عن مشروعك وسنتواصل معك خلال 24 ساعة' : "Tell us about your project and we'll get back to you within 24 hours"}
           </p>
         </motion.div>
 
