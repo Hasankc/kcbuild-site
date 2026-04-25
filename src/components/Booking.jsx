@@ -6,7 +6,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useLanguage } from '../context/LanguageContext'
+import { useLang } from '../context/LanguageContext'
 import {
   Calendar,
   Send,
@@ -33,7 +33,7 @@ const FADE_UP = {
 }
 
 export default function Booking() {
-  const { t, isRTL } = useLanguage()
+  const { t, lang } = useLang() const isRTL = lang === 'ar'
 
   const [form, setForm] = useState({
     name: '',
