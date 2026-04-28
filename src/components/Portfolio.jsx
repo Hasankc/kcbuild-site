@@ -1,141 +1,310 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Github, ExternalLink } from 'lucide-react'
 import { useLang } from '../context/LanguageContext'
+import { ExternalLink, ArrowRight, Star, Users, Zap, ShoppingBag, Globe, Code2 } from 'lucide-react'
 
-function SectionBadge({ text }) {
-  return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-turquoise/30 bg-turquoise/8 dark:bg-turquoise/10 mb-4">
-      <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
-      <span className="text-xs font-bold text-turquoise-dark dark:text-turquoise uppercase tracking-wider">{text}</span>
-    </div>
-  )
+const FADE_UP = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.55, delay: i * 0.1 } }),
 }
 
-export default function Portfolio() {
-  const { t } = useLang()
-  const p = t.portfolio
-  const [activeFilter, setActiveFilter] = useState(p.filters[0])
+const PROJECTS = [
+  {
+    id: 1,
+    name: 'Melanin Nerd Selections',
+    nameAr: 'ميلانين نيرد',
+    category: 'E-Commerce',
+    categoryAr: 'متجر إلكتروني',
+    description: 'Premium skincare e-commerce platform built for a real client, serving customers across Iraq and the region. Features bilingual Arabic/English support, real-time inventory, Cloudinary image management, and a mobile-first luxury shopping experience.',
+    descriptionAr: 'منصة تجارة إلكترونية متميزة للعناية بالبشرة، بُنيت لعميل حقيقي وتخدم عملاء في العراق والمنطقة. تتميز بدعم ثنائي اللغة، إدارة المخزون الفوري، وتجربة تسوق فاخرة.',
+    tech: ['Next.js', 'Cloudinary', 'MongoDB', 'Arabic/English', 'Mobile First'],
+    stats: [
+      { icon: <Users size={14} />, label: 'Real Customers', labelAr: 'عملاء حقيقيون' },
+      { icon: <Globe size={14} />, label: 'Bilingual', labelAr: 'ثنائي اللغة' },
+      { icon: <ShoppingBag size={14} />, label: 'Live Store', labelAr: 'متجر نشط' },
+    ],
+    link: 'https://melanin-nerd-ruby.vercel.app/',
+    color: '#c8956c',
+    bgGradient: 'from-amber-900/20 via-orange-900/10 to-transparent',
+    badge: '✦ Live Client Project',
+    badgeAr: '✦ مشروع عميل حقيقي',
+    featured: true,
+    emoji: '🧴',
+  },
+  {
+    id: 2,
+    name: 'KC Build Agency Site',
+    nameAr: 'موقع KC Build',
+    category: 'Agency Website',
+    categoryAr: 'موقع وكالة',
+    description: 'A high-performance bilingual web agency website with dark/light mode, smooth animations, RTL Arabic support, custom cursor, scroll progress, and an integrated booking system — all without a backend.',
+    descriptionAr: 'موقع وكالة ويب عالي الأداء بدعم ثنائي اللغة، وضع داكن/فاتح، رسوم متحركة سلسة، ونظام حجز متكامل.',
+    tech: ['React', 'Vite', 'Tailwind CSS', 'Framer Motion', 'RTL Support'],
+    stats: [
+      { icon: <Zap size={14} />, label: '100 Performance', labelAr: 'أداء 100%' },
+      { icon: <Globe size={14} />, label: 'Bilingual', labelAr: 'ثنائي اللغة' },
+      { icon: <Star size={14} />, label: 'Modern UI', labelAr: 'واجهة عصرية' },
+    ],
+    link: 'https://kcbuild-site.vercel.app/',
+    color: '#2DD4BF',
+    bgGradient: 'from-teal-900/20 via-cyan-900/10 to-transparent',
+    badge: '✦ Our Own Website',
+    badgeAr: '✦ موقعنا الخاص',
+    featured: false,
+    emoji: '🚀',
+  },
+  {
+    id: 3,
+    name: 'Full-Stack SaaS Dashboard',
+    nameAr: 'لوحة تحكم SaaS',
+    category: 'Web Application',
+    categoryAr: 'تطبيق ويب',
+    description: 'A modern SaaS analytics dashboard with real-time data visualization, user authentication, role-based access control, and a responsive admin panel — built for scale.',
+    descriptionAr: 'لوحة تحكم SaaS حديثة مع تصور البيانات الفوري، مصادقة المستخدم، والتحكم بالصلاحيات.',
+    tech: ['React', 'Node.js', 'PostgreSQL', 'Chart.js', 'JWT Auth'],
+    stats: [
+      { icon: <Code2 size={14} />, label: 'Full Stack', labelAr: 'كامل المكدس' },
+      { icon: <Zap size={14} />, label: 'Real-time', labelAr: 'فوري' },
+      { icon: <Star size={14} />, label: 'Scalable', labelAr: 'قابل للتوسع' },
+    ],
+    link: null,
+    color: '#7c3aed',
+    bgGradient: 'from-purple-900/20 via-violet-900/10 to-transparent',
+    badge: '✦ Available for Order',
+    badgeAr: '✦ متاح للطلب',
+    featured: false,
+    emoji: '📊',
+  },
+  {
+    id: 4,
+    name: 'Luxury Real Estate Platform',
+    nameAr: 'منصة عقارات فاخرة',
+    category: 'Real Estate',
+    categoryAr: 'عقارات',
+    description: 'A premium property listing platform with advanced search filters, virtual tour integration, bilingual support, WhatsApp lead capture, and a powerful admin CMS to manage listings.',
+    descriptionAr: 'منصة عقارية فاخرة مع فلاتر بحث متقدمة، جولات افتراضية، التقاط العملاء عبر واتساب، ونظام إدارة محتوى.',
+    tech: ['Next.js', 'Sanity CMS', 'Google Maps', 'WhatsApp API', 'Arabic/English'],
+    stats: [
+      { icon: <Globe size={14} />, label: 'Bilingual', labelAr: 'ثنائي اللغة' },
+      { icon: <Users size={14} />, label: 'Lead Gen', labelAr: 'جذب العملاء' },
+      { icon: <Star size={14} />, label: 'Premium UI', labelAr: 'واجهة فاخرة' },
+    ],
+    link: null,
+    color: '#d4af37',
+    bgGradient: 'from-yellow-900/20 via-amber-900/10 to-transparent',
+    badge: '✦ Available for Order',
+    badgeAr: '✦ متاح للطلب',
+    featured: false,
+    emoji: '🏡',
+  },
+]
 
-  const filtered = activeFilter === p.filters[0]
-    ? p.projects
-    : p.projects.filter(proj => proj.category === activeFilter)
+export default function Portfolio() {
+  const { lang } = useLang()
+  const isRTL = lang === 'ar'
+  const [selected, setSelected] = useState(null)
 
   return (
-    <section id="portfolio" className="pt-48 pb-24 bg-white/40 dark:bg-navy-card/30 relative">
-      <div className="section-divider mb-20" />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
-        >
-          <SectionBadge text={p.badge} />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black gradient-text mb-20 leading-loose">{p.title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto mt-4 mb-12">{p.sub}</p>
+    <section id="portfolio" className="py-24 bg-white dark:bg-navy-card" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+
+        {/* Header */}
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={FADE_UP} className="text-center mb-16">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-turquoise/10 text-turquoise text-sm font-semibold mb-4 border border-turquoise/20">
+            {isRTL ? '🏆 أعمالنا' : '🏆 Our Work'}
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-navy dark:text-white mb-4">
+            {isRTL ? 'مشاريع حقيقية، نتائج حقيقية' : 'Real Projects, Real Results'}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+            {isRTL
+              ? 'من المتاجر الإلكترونية إلى التطبيقات المتكاملة — نبني ما يُحدث فارقاً'
+              : 'From e-commerce stores to full-stack apps — we build things that make an impact'}
+          </p>
         </motion.div>
 
-        {/* Filter Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-2 mb-10"
-        >
-          {p.filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                activeFilter === filter
-                  ? 'bg-turquoise text-white shadow-sm'
-                  : 'border border-turquoise/25 text-gray-500 dark:text-gray-400 hover:border-turquoise hover:text-turquoise'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </motion.div>
+        {/* Featured project — Melanin Nerd */}
+        {PROJECTS.filter(p => p.featured).map((project, i) => (
+          <motion.div
+            key={project.id}
+            initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
+            variants={FADE_UP}
+            className="mb-8"
+          >
+            <div className={`relative rounded-3xl overflow-hidden border border-white/10 dark:border-navy-border bg-gradient-to-br ${project.bgGradient} bg-navy dark:bg-navy group`}
+              style={{ background: 'linear-gradient(135deg, #1a0f08 0%, #0f0a04 100%)' }}>
 
-        {/* Cards Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((proj, i) => (
-              <motion.div
-                key={proj.title}
-                layout
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 }}
-              >
-                <div className="glass-card overflow-hidden h-full flex flex-col group">
-                  {/* Card header gradient */}
-                  <div className={`h-24 bg-gradient-to-br ${proj.color} flex items-center justify-center text-4xl relative overflow-hidden`}>
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_50%,white,transparent)]" />
-                    <span className="relative z-10 drop-shadow-sm">{proj.icon}</span>
-                    {/* Category badge */}
-                    <span className="absolute top-3 end-3 px-2 py-0.5 text-xs font-bold bg-white/20 text-white rounded-full backdrop-blur-sm">
-                      {proj.category}
-                    </span>
-                  </div>
+              {/* Featured badge */}
+              <div className="absolute top-5 start-5 z-10">
+                <span className="px-3 py-1.5 rounded-full text-xs font-bold"
+                  style={{ background: project.color, color: '#fff' }}>
+                  {isRTL ? project.badgeAr : project.badge}
+                </span>
+              </div>
 
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{proj.title}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4 flex-1">{proj.desc}</p>
-
-                    {/* Tech tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {proj.tech.map((tag, j) => (
-                        <span
-                          key={j}
-                          className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-turquoise/10 text-turquoise-dark dark:text-turquoise border border-turquoise/20"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-3">
-                      <motion.a
-                        href={proj.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-navy-border text-sm font-semibold hover:border-turquoise hover:text-turquoise transition-all"
-                      >
-                        <Github size={15} />
-                        {p.viewCode}
-                      </motion.a>
-                      {proj.live ? (
-                        <motion.a
-                          href={proj.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.04 }}
-                          whileTap={{ scale: 0.97 }}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-turquoise text-white text-sm font-semibold hover:bg-turquoise-dark transition-colors"
-                        >
-                          <ExternalLink size={15} />
-                          {p.viewLive}
-                        </motion.a>
-                      ) : (
-                        <span className="px-4 py-2 text-sm font-semibold text-gray-400 dark:text-gray-500 rounded-xl border border-dashed border-gray-200 dark:border-navy-border">
-                          {p.comingSoon}
-                        </span>
-                      )}
+              <div className="grid md:grid-cols-2 gap-0 items-center">
+                {/* Left content */}
+                <div className="p-8 md:p-12">
+                  <div className="flex items-center gap-3 mb-4 mt-6">
+                    <span className="text-4xl">{project.emoji}</span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: project.color }}>
+                        {isRTL ? project.categoryAr : project.category}
+                      </p>
+                      <h3 className="text-2xl md:text-3xl font-bold text-white">
+                        {isRTL ? project.nameAr : project.name}
+                      </h3>
                     </div>
                   </div>
+
+                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                    {isRTL ? project.descriptionAr : project.description}
+                  </p>
+
+                  {/* Stats */}
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {project.stats.map((stat, idx) => (
+                      <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                        style={{ background: `${project.color}20`, color: project.color, border: `1px solid ${project.color}40` }}>
+                        {stat.icon}
+                        {isRTL ? stat.labelAr : stat.label}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Tech stack */}
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {project.tech.map(t => (
+                      <span key={t} className="px-2.5 py-1 rounded-lg text-xs bg-white/10 text-gray-300 border border-white/10">{t}</span>
+                    ))}
+                  </div>
+
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer nofollow"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105 hover:gap-3"
+                      style={{ background: project.color, color: '#fff' }}>
+                      {isRTL ? 'زيارة الموقع' : 'Visit Live Site'}
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+
+                {/* Right — site screenshot mockup */}
+                <div className="relative h-64 md:h-full min-h-[320px] overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center p-6">
+                    <div className="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                      style={{ background: '#fdf8f5' }}>
+                      {/* Browser bar */}
+                      <div className="flex items-center gap-1.5 px-3 py-2 bg-gray-800">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                        <div className="flex-1 mx-2 bg-gray-700 rounded px-2 py-0.5 text-[10px] text-gray-400">
+                          melanin-nerd-ruby.vercel.app
+                        </div>
+                      </div>
+                      {/* Site preview */}
+                      <div className="p-4" style={{ background: '#fdf8f5' }}>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full" style={{ background: project.color }} />
+                            <span className="text-xs font-bold text-gray-800">Melanin Nerd</span>
+                          </div>
+                          <span className="text-[10px] text-gray-500">عربي</span>
+                        </div>
+                        <p className="text-[10px] text-gray-500 mb-3 text-center">Premium skincare selections</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {['🧴', '💆', '✨', '🌿', '💊', '🫧'].map((em, idx) => (
+                            <div key={idx} className="aspect-square rounded-xl flex items-center justify-center text-xl"
+                              style={{ background: `${project.color}20`, border: `1px solid ${project.color}30` }}>
+                              {em}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent to-navy/20 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+
+        {/* Other projects grid */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {PROJECTS.filter(p => !p.featured).map((project, i) => (
+            <motion.div
+              key={project.id}
+              initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
+              variants={FADE_UP}
+              onClick={() => setSelected(selected === project.id ? null : project.id)}
+              className="relative rounded-2xl overflow-hidden border border-gray-100 dark:border-navy-border bg-white dark:bg-navy cursor-pointer group hover:border-turquoise/30 transition-all duration-300 hover:shadow-xl hover:shadow-turquoise/5"
+            >
+              {/* Color accent top bar */}
+              <div className="h-1 w-full" style={{ background: project.color }} />
+
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-3xl">{project.emoji}</span>
+                  <span className="text-[10px] px-2 py-1 rounded-full font-semibold"
+                    style={{ background: `${project.color}15`, color: project.color }}>
+                    {isRTL ? project.categoryAr : project.category}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-bold text-navy dark:text-white mb-2">
+                  {isRTL ? project.nameAr : project.name}
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                  {isRTL ? project.descriptionAr : project.description}
+                </p>
+
+                {/* Tech tags */}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {project.tech.slice(0, 3).map(t => (
+                    <span key={t} className="px-2 py-0.5 rounded text-[10px] bg-gray-100 dark:bg-navy-card2 text-gray-500 dark:text-gray-400">{t}</span>
+                  ))}
+                  {project.tech.length > 3 && (
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-gray-100 dark:bg-navy-card2 text-gray-500">+{project.tech.length - 3}</span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-semibold" style={{ color: project.color }}>
+                    {isRTL ? project.badgeAr : project.badge}
+                  </span>
+                  {project.link ? (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer nofollow"
+                      onClick={e => e.stopPropagation()}
+                      className="flex items-center gap-1 text-xs font-semibold transition-all hover:gap-2"
+                      style={{ color: project.color }}>
+                      {isRTL ? 'زيارة' : 'Visit'} <ExternalLink size={12} />
+                    </a>
+                  ) : (
+                    <button className="flex items-center gap-1 text-xs font-semibold text-turquoise hover:gap-2 transition-all">
+                      {isRTL ? 'اطلب الآن' : 'Order Now'} <ArrowRight size={12} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={FADE_UP}
+          className="text-center mt-14">
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
+            {isRTL ? 'هل تريد مشروعاً مشابهاً؟' : 'Want something similar built for you?'}
+          </p>
+          <a href="#contact"
+            onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+            className="inline-flex items-center gap-2 px-8 py-3 bg-turquoise hover:bg-teal-500 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg shadow-turquoise/25">
+            {isRTL ? 'ابدأ مشروعك الآن' : "Let's Build Yours"}
+            <ArrowRight size={16} />
+          </a>
         </motion.div>
       </div>
     </section>

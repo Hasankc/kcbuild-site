@@ -22,9 +22,9 @@ export default function Booking() {
   const isRTL = lang === 'ar'
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
-  const [honeypot, setHoneypot] = useState('')         // bot trap
-  const [fieldErrors, setFieldErrors] = useState({})   // per-field errors
-  const [status, setStatus] = useState('idle')          // idle|loading|success|error|ratelimit
+  const [honeypot, setHoneypot] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
+  const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
   const services = isRTL
@@ -33,7 +33,6 @@ export default function Booking() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    // Clear field error on change
     setFieldErrors((prev) => ({ ...prev, [name]: null }))
     setForm((prev) => ({ ...prev, [name]: value }))
   }
@@ -41,14 +40,12 @@ export default function Booking() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // ── A04: Honeypot bot check ──
     if (isHoneypotTriggered(honeypot)) {
       logSecurityEvent('HONEYPOT_TRIGGERED')
-      setStatus('success') // show success to fool bots
+      setStatus('success')
       return
     }
 
-    // ── A04: Rate limit check ──
     const rate = checkRateLimit()
     if (!rate.allowed) {
       setStatus('ratelimit')
@@ -60,10 +57,7 @@ export default function Booking() {
       return
     }
 
-    // ── A03: Sanitize all inputs ──
     const clean = sanitizeForm(form)
-
-    // ── A04: Validate all fields ──
     const errors = validateForm(clean)
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors)
@@ -79,10 +73,7 @@ export default function Booking() {
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
           name: clean.name,
           email: clean.email,
@@ -96,7 +87,6 @@ export default function Booking() {
       if (res.ok) {
         setStatus('success')
         setForm({ name: '', email: '', phone: '', service: '', message: '' })
-        logSecurityEvent('FORM_SUBMITTED_OK')
       } else {
         throw new Error(`HTTP ${res.status}`)
       }
@@ -111,14 +101,11 @@ export default function Booking() {
     }
   }
 
-  // Shared input class
   const inputClass = (field) =>
     `w-full ps-10 pe-4 py-3 rounded-xl border text-sm transition
      bg-gray-50 dark:bg-navy/50 text-navy dark:text-white placeholder-gray-400
      focus:outline-none focus:ring-2 focus:ring-turquoise/40 focus:border-turquoise
-     ${fieldErrors[field]
-       ? 'border-red-400 dark:border-red-500'
-       : 'border-gray-200 dark:border-navy-border'}`
+     ${fieldErrors[field] ? 'border-red-400 dark:border-red-500' : 'border-gray-200 dark:border-navy-border'}`
 
   return (
     <section id="contact" className="py-24 bg-offwhite dark:bg-navy" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -143,6 +130,8 @@ export default function Booking() {
 
           {/* Left */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={FADE_UP} className="space-y-6">
+
+            {/* Calendly card */}
             <div className="rounded-2xl border border-turquoise/20 bg-white dark:bg-navy-card p-8 shadow-lg">
               <div className="w-12 h-12 rounded-xl bg-turquoise/10 flex items-center justify-center mb-4">
                 <Calendar className="text-turquoise" size={24} />
@@ -151,30 +140,56 @@ export default function Booking() {
                 {isRTL ? 'احجز اجتماعاً مجانياً' : 'Book a Free Call'}
               </h3>
               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-                {isRTL ? 'اختر وقتاً يناسبك لمناقشة مشروعك' : 'Pick a time to discuss your project directly'}
+                {isRTL
+                  ? 'اختر وقتاً يناسبك لمناقشة مشروعك معنا مباشرة'
+                  : 'Pick a time that works for you — we reply within 24 hours'}
               </p>
               <a
-                href="https://calendly.com/app/workflows/user/me"
+                href="https://calendly.com/hasankc"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-turquoise hover:bg-teal-500 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg shadow-turquoise/25"
               >
                 <Calendar size={18} />
-                {isRTL ? 'احجز الآن' : 'Book Now — Free'}
+                {isRTL ? 'احجز الآن — مجاناً' : 'Book Now — Free'}
               </a>
             </div>
 
+            {/* Contact info cards */}
             <div className="grid grid-cols-1 gap-3">
               {[
-                { icon: '📧', label: isRTL ? 'البريد الإلكتروني' : 'Email', value: 'hello@kcbuild.iq' },
-                { icon: '📱', label: 'WhatsApp', value: '+964 xxx xxx xxxx' },
-                { icon: '⏰', label: isRTL ? 'وقت الرد' : 'Response Time', value: isRTL ? 'خلال 24 ساعة' : 'Within 24 hours' },
-              ].map(({ icon, label, value }) => (
-                <div key={label} className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-navy-card border border-gray-100 dark:border-navy-border">
+                {
+                  icon: '📧',
+                  label: isRTL ? 'البريد الإلكتروني' : 'Email',
+                  value: 'kcbuild@yahoo.com',
+                  href: 'mailto:kcbuild@yahoo.com',
+                },
+                {
+                  icon: '📱',
+                  label: 'WhatsApp',
+                  value: '+358 45 113 9969',
+                  href: 'https://wa.me/358451139969',
+                },
+                {
+                  icon: '⏰',
+                  label: isRTL ? 'وقت الرد' : 'Response Time',
+                  value: isRTL ? 'خلال 24 ساعة' : 'Within 24 hours',
+                  href: null,
+                },
+              ].map(({ icon, label, value, href }) => (
+                <div key={label} className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-navy-card border border-gray-100 dark:border-navy-border hover:border-turquoise/30 transition-colors">
                   <span className="text-2xl">{icon}</span>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-400 dark:text-gray-500">{label}</p>
-                    <p className="text-sm font-semibold text-navy dark:text-white">{value}</p>
+                    {href ? (
+                      <a href={href} target={href.startsWith('http') ? '_blank' : undefined}
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-navy dark:text-white hover:text-turquoise transition-colors truncate block">
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="text-sm font-semibold text-navy dark:text-white">{value}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -214,16 +229,9 @@ export default function Booking() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4" noValidate>
 
-                  {/* Honeypot — hidden from real users, bots fill this */}
+                  {/* Honeypot */}
                   <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
-                    <input
-                      type="text"
-                      name="website"
-                      value={honeypot}
-                      onChange={(e) => setHoneypot(e.target.value)}
-                      tabIndex={-1}
-                      autoComplete="off"
-                    />
+                    <input type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
                   </div>
 
                   {/* Name */}
@@ -232,8 +240,7 @@ export default function Booking() {
                       <User size={16} className="absolute top-3.5 start-3.5 text-gray-400" />
                       <input type="text" name="name" value={form.name} onChange={handleChange}
                         placeholder={isRTL ? 'الاسم الكامل *' : 'Full Name *'}
-                        maxLength={100} autoComplete="name"
-                        className={inputClass('name')} />
+                        maxLength={100} autoComplete="name" className={inputClass('name')} />
                     </div>
                     {fieldErrors.name && <p className="text-red-500 text-xs mt-1 ps-1">{fieldErrors.name}</p>}
                   </div>
@@ -244,8 +251,7 @@ export default function Booking() {
                       <Mail size={16} className="absolute top-3.5 start-3.5 text-gray-400" />
                       <input type="email" name="email" value={form.email} onChange={handleChange}
                         placeholder={isRTL ? 'البريد الإلكتروني *' : 'Email Address *'}
-                        maxLength={254} autoComplete="email"
-                        className={inputClass('email')} />
+                        maxLength={254} autoComplete="email" className={inputClass('email')} />
                     </div>
                     {fieldErrors.email && <p className="text-red-500 text-xs mt-1 ps-1">{fieldErrors.email}</p>}
                   </div>
@@ -256,8 +262,7 @@ export default function Booking() {
                       <Phone size={16} className="absolute top-3.5 start-3.5 text-gray-400" />
                       <input type="tel" name="phone" value={form.phone} onChange={handleChange}
                         placeholder={isRTL ? 'رقم الهاتف (اختياري)' : 'Phone Number (optional)'}
-                        maxLength={20} autoComplete="tel"
-                        className={inputClass('phone')} />
+                        maxLength={20} autoComplete="tel" className={inputClass('phone')} />
                     </div>
                     {fieldErrors.phone && <p className="text-red-500 text-xs mt-1 ps-1">{fieldErrors.phone}</p>}
                   </div>
@@ -279,14 +284,12 @@ export default function Booking() {
                         className={`${inputClass('message')} resize-none`} />
                     </div>
                     <div className="flex justify-between mt-1 px-1">
-                      {fieldErrors.message
-                        ? <p className="text-red-500 text-xs">{fieldErrors.message}</p>
-                        : <span />}
+                      {fieldErrors.message ? <p className="text-red-500 text-xs">{fieldErrors.message}</p> : <span />}
                       <p className="text-xs text-gray-400">{form.message.length}/2000</p>
                     </div>
                   </div>
 
-                  {/* Error / rate limit banner */}
+                  {/* Error banner */}
                   {(status === 'error' || status === 'ratelimit') && (
                     <div className="flex items-center gap-2 text-red-500 text-sm bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl border border-red-200 dark:border-red-800">
                       <AlertCircle size={16} className="shrink-0" />
@@ -311,6 +314,3 @@ export default function Booking() {
           </motion.div>
         </div>
       </div>
-    </section>
-  )
-}
