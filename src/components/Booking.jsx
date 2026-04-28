@@ -314,6 +314,7 @@ export default function Booking() {
           </motion.div>
         </div>
       </div>
-      </section>
+    </section>
   )
+}
 }
