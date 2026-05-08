@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Moon, Sun, Menu, X, Calendar } from 'lucide-react'
+import { Moon, Sun, Menu, X, Calendar, Sparkles } from 'lucide-react'
 import { useLang } from '../context/LanguageContext'
 import { useTheme } from '../context/ThemeContext'
 
@@ -19,7 +19,6 @@ const FlagIcon = ({ country }) => {
       </svg>
     )
   }
-
   return (
     <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
       <rect width="22" height="14" fill="#012169" />
@@ -31,7 +30,6 @@ const FlagIcon = ({ country }) => {
   )
 }
 
-// Added onNavigate to props
 export default function Navbar({ onNavigate }) {
   const { t, lang, toggleLang } = useLang()
   const { theme, toggleTheme } = useTheme()
@@ -40,17 +38,8 @@ export default function Navbar({ onNavigate }) {
   const [activeSection, setActiveSection] = useState('hero')
 
   const langButtonContent = lang === 'ar'
-    ? (
-      <>
-        <FlagIcon country="ar" />
-        <span className="ms-1">AR</span>
-      </>
-    ) : (
-      <>
-        <FlagIcon country="en" />
-        <span className="ms-1">EN</span>
-      </>
-    )
+    ? (<><FlagIcon country="ar" /><span className="ms-1">AR</span></>)
+    : (<><FlagIcon country="en" /><span className="ms-1">EN</span></>)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -76,8 +65,7 @@ export default function Navbar({ onNavigate }) {
   const scrollTo = (id) => {
     const el = document.getElementById(id)
     if (el) {
-      const offset = 104
-      const top = el.getBoundingClientRect().top + window.pageYOffset - offset
+      const top = el.getBoundingClientRect().top + window.pageYOffset - 104
       window.scrollTo({ top, behavior: 'smooth' })
     }
     setMenuOpen(false)
@@ -97,24 +85,32 @@ export default function Navbar({ onNavigate }) {
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/85 dark:bg-navy-card/90 backdrop-blur-md border-b border-turquoise/10 shadow-sm'
+          ? 'bg-white/90 dark:bg-navy-card/95 backdrop-blur-xl border-b border-turquoise/10 shadow-lg shadow-black/5'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+
+          {/* ── Logo ── */}
           <button
             onClick={() => scrollTo('hero')}
-            className="flex items-center gap-1 group"
+            className="flex items-center gap-2 group"
             dir="ltr"
           >
-            <span className="text-xl font-black text-turquoise tracking-tight leading-none">Kc</span>
-            <span className="text-xl font-black text-gray-800 dark:text-white tracking-tight leading-none">Build</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1 animate-pulse-dot" />
+            {/* Icon mark */}
+            <div className="w-8 h-8 rounded-lg bg-turquoise flex items-center justify-center shadow-md shadow-turquoise/30 group-hover:scale-110 transition-transform duration-200">
+              <span className="text-white font-black text-sm leading-none">K</span>
+            </div>
+            {/* Wordmark */}
+            <div className="flex items-baseline gap-0.5">
+              <span className="text-lg font-black text-turquoise tracking-tight leading-none">KcAlish</span>
+              <span className="text-lg font-black text-gray-800 dark:text-white tracking-tight leading-none ms-1">Solutions</span>
+            </div>
+            <span className="w-1.5 h-1.5 rounded-full bg-turquoise animate-pulse-dot hidden sm:block" />
           </button>
 
-          {/* Desktop Nav Links */}
+          {/* ── Desktop Nav Links ── */}
           <div className="hidden md:flex items-center gap-7">
             {navItems.map(item => (
               <button
@@ -137,9 +133,9 @@ export default function Navbar({ onNavigate }) {
             ))}
           </div>
 
-          {/* Controls */}
+          {/* ── Desktop Controls ── */}
           <div className="hidden md:flex items-center gap-2">
-            {/* Language Toggle */}
+            {/* Language */}
             <button
               onClick={toggleLang}
               className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full hover:bg-turquoise hover:text-white transition-all duration-200 whitespace-nowrap"
@@ -147,10 +143,10 @@ export default function Navbar({ onNavigate }) {
               {langButtonContent}
             </button>
 
-            {/* Theme Toggle */}
+            {/* Theme */}
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border hover:border-turquoise hover:text-turquoise dark:hover:border-turquoise transition-all duration-200"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border hover:border-turquoise hover:text-turquoise transition-all duration-200"
               aria-label="Toggle theme"
             >
               {theme === 'dark'
@@ -158,28 +154,28 @@ export default function Navbar({ onNavigate }) {
                 : <Moon size={15} className="text-gray-600" />}
             </button>
 
-            {/* --- NEW DESIGN SHOWCASE BUTTON --- */}
+            {/* Design Showcase */}
             <button
-              onClick={() => onNavigate('showcase')}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-turquoise text-navy rounded-lg hover:bg-turquoise-dark transition-all"
+              onClick={() => onNavigate && onNavigate('showcase')}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold border border-turquoise/30 text-turquoise rounded-lg hover:bg-turquoise/10 transition-all duration-200"
             >
-              🎨 Design Showcase
+              <Sparkles size={14} />
+              {lang === 'ar' ? 'عرض التصاميم' : 'Design Showcase'}
             </button>
-            {/* --------------------------------- */}
 
-            {/* CTA Button */}
+            {/* CTA */}
             <motion.button
               onClick={() => scrollTo('contact')}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-1.5 px-4 py-2 bg-turquoise text-white text-sm font-semibold rounded-xl hover:bg-turquoise-dark transition-colors duration-200 shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-turquoise text-white text-sm font-semibold rounded-xl hover:bg-teal-500 transition-colors duration-200 shadow-md shadow-turquoise/25"
             >
               <Calendar size={14} />
               <span>{t.nav.bookBtn}</span>
             </motion.button>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* ── Mobile Hamburger ── */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-controls="mobile-menu"
@@ -197,7 +193,7 @@ export default function Navbar({ onNavigate }) {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ── Mobile Menu ── */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -206,7 +202,7 @@ export default function Navbar({ onNavigate }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="md:hidden overflow-hidden bg-white/95 dark:bg-navy-card/95 backdrop-blur-md border-t border-gray-100 dark:border-navy-border"
+            className="md:hidden overflow-hidden bg-white/95 dark:bg-navy-card/95 backdrop-blur-xl border-t border-gray-100 dark:border-navy-border"
           >
             <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1">
               {navItems.map((item, i) => (
@@ -225,33 +221,24 @@ export default function Navbar({ onNavigate }) {
                   {item.label}
                 </motion.button>
               ))}
-              <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-3 border-t border-gray-100 dark:border-navy-border mt-1">
-                <button
-                  onClick={toggleLang}
-                  className="flex items-center justify-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full whitespace-nowrap"
-                >
+              <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-gray-100 dark:border-navy-border mt-1">
+                <button onClick={toggleLang}
+                  className="flex items-center justify-center gap-1 px-3 py-1.5 text-sm font-bold border border-turquoise text-turquoise rounded-full">
                   {langButtonContent}
                 </button>
-                <button onClick={toggleTheme} className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border">
+                <button onClick={toggleTheme}
+                  className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-navy-border">
                   {theme === 'dark' ? <Sun size={15} className="text-turquoise" /> : <Moon size={15} />}
                 </button>
-                
-                {/* --- MOBILE DESIGN SHOWCASE BUTTON --- */}
                 <button
-                  onClick={() => {
-                    onNavigate('showcase')
-                    setMenuOpen(false)
-                  }}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-turquoise text-navy rounded-lg hover:bg-turquoise-dark transition-all"
-                >
-                  🎨 Design Showcase
+                  onClick={() => { onNavigate && onNavigate('showcase'); setMenuOpen(false) }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold border border-turquoise/30 text-turquoise rounded-lg">
+                  <Sparkles size={13} />
+                  {lang === 'ar' ? 'عرض التصاميم' : 'Showcase'}
                 </button>
-                {/* -------------------------------------- */}
-
                 <button
                   onClick={() => scrollTo('contact')}
-                  className="flex-1 py-2 bg-turquoise text-white text-sm font-semibold rounded-xl text-center"
-                >
+                  className="flex-1 py-2 bg-turquoise text-white text-sm font-semibold rounded-xl text-center min-w-[100px]">
                   {t.nav.bookBtn}
                 </button>
               </div>
