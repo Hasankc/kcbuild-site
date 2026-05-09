@@ -17,14 +17,12 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-navy dark:bg-navy text-white overflow-hidden">
-      {/* Top gradient divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-turquoise/50 to-transparent" />
 
       {/* Background orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 start-0 w-72 h-72 rounded-full bg-turquoise/5 blur-3xl" />
         <div className="absolute top-0 end-0 w-48 h-48 rounded-full bg-turquoise/4 blur-3xl" />
-        {/* Grid dots */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -36,6 +34,7 @@ export default function Footer() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10 mb-10 ${isRTL ? 'text-right' : 'text-left'}`}>
+
           {/* Col 1 — Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -44,11 +43,23 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
             className={isRTL ? 'text-right' : 'text-left'}
           >
-            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'justify-end' : 'justify-start'}`} dir="ltr">
-              <span className="text-2xl font-black text-turquoise leading-none">Kc</span>
-              <span className="text-2xl font-black text-white leading-none">Build</span>
-              <span className={isRTL ? 'w-1.5 h-1.5 rounded-full bg-turquoise me-0' : 'w-1.5 h-1.5 rounded-full bg-turquoise ms-2'} />
+            {/* Logo */}
+            <div
+              className={`flex items-center gap-2 mb-3 ${isRTL ? 'justify-end' : 'justify-start'}`}
+              dir="ltr"
+            >
+              {/* Icon mark */}
+              <div className="w-8 h-8 rounded-lg bg-turquoise flex items-center justify-center shadow-md shadow-turquoise/30 shrink-0">
+                <span className="text-white font-black text-sm leading-none">K</span>
+              </div>
+              {/* Wordmark */}
+              <div className="flex items-baseline">
+                <span className="text-xl font-black text-turquoise leading-none tracking-tight">KcAlish</span>
+                <span className="text-xl font-black text-white leading-none tracking-tight ms-1">Solutions</span>
+              </div>
+              <span className="w-1.5 h-1.5 rounded-full bg-turquoise ms-1 shrink-0" />
             </div>
+
             <p className={`text-sm text-white/50 leading-relaxed mb-4 max-w-[220px] ${isRTL ? 'text-right' : 'text-left'}`}>
               {f.tagline}
             </p>
@@ -94,11 +105,10 @@ export default function Footer() {
               {f.social}
             </h4>
             <div className="space-y-3">
-              {/* Instagram */}
               <motion.a
-                href="https://instagram.com/kcbuild.iq"
+                href="https://instagram.com/kcalish.solutions"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-3 group"
               >
@@ -107,18 +117,17 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white/80 group-hover:text-turquoise transition-colors">
-                    @kcbuild.iq
+                    @kcalish.solutions
                   </p>
                   <p className="text-xs text-white/35">Instagram</p>
                 </div>
                 <ExternalLink size={12} className="text-white/30 group-hover:text-turquoise transition-colors ms-auto" />
               </motion.a>
 
-              {/* GitHub */}
               <motion.a
                 href="https://github.com/Hasankc"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-3 group"
               >
@@ -140,6 +149,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className={`border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 ${isRTL ? 'text-right' : 'text-left'}`}>
           <p className="text-xs text-white/30">{f.rights}</p>
+          <p className="text-xs text-white/20">KcAlish Solutions — kcbuild@yahoo.com</p>
         </div>
       </div>
     </footer>
